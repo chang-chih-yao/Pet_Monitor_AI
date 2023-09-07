@@ -1,5 +1,6 @@
 import cv2
 import time
+from datetime import datetime, timedelta
 
 # 初始化 VideoCapture 物件
 cap = cv2.VideoCapture(0)
@@ -19,6 +20,8 @@ def mouse_callback(event, x, y, flags, param):
     global show_frame
     if event == cv2.EVENT_LBUTTONDOWN:
         show_frame = not show_frame
+        cv2.putText(frame, f'{GMT8_time.strftime("%Y/%m/%d %H:%M:%S")} stop', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+        cv2.imshow("WebCam", frame)
 
 # 設定滑鼠回調函數
 cv2.namedWindow("WebCam")
@@ -29,6 +32,8 @@ while True:
     if show_frame:
         ret, frame = cap.read()
         if ret:           # 如果成功讀取，則顯示
+            GMT8_time = datetime.utcnow() + timedelta(hours=8)
+            cv2.putText(frame, GMT8_time.strftime("%Y/%m/%d %H:%M:%S"), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2, cv2.LINE_AA)
             cv2.imshow("WebCam", frame)
 
     # 檢查是否按下 'Esc' 鍵
